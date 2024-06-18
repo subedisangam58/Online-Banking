@@ -6,12 +6,6 @@ if(!isset($_SESSION['admin_id'])){
 }
 require_once '../connection.php';
 $user_id = $_SESSION['admin_id'];
-$sql = "SELECT * FROM Account";
-$result = $connection->query($sql);
-
-if (!$result) {
-    trigger_error('Invalid query: ' . $connection->error);
-}
 
 if(isset($_POST['update'])) {
     $update_query = "UPDATE users SET 
@@ -31,15 +25,30 @@ if(isset($_POST['update'])) {
 }
 $msg = '';
 if(isset($_POST['delete'])) {
-    $delete_query = "DELETE FROM users WHERE User_id = $userIdToDelete";
+    $userIdToDelete = $_POST['user_id'];
     
-    if ($connection->query($delete_query) === TRUE) {
-        $msg = "Record deleted successfully";
-        header("Location: clients.php");
-        exit();
+    $delete_query = "UPDATE Account SET IsDeleted = 1 WHERE Account_id = ?";
+    if ($stmt = $connection->prepare($delete_query)) {
+        $stmt->bind_param('i', $userIdToDelete);
+        if ($stmt->execute()) {
+            $msg = "Record marked as deleted successfully";
+        } else {
+            $msg = "Error marking record as deleted: " . $stmt->error;
+        }
+        $stmt->close();
     } else {
-        $msg = "Error deleting record: " . $connection->error;
+        $msg = "Error preparing delete statement: " . $connection->error;
     }
+    header("Location: manageAccounts.php");
+    exit();
+}
+
+// Fetch non-deleted Accounts
+$sql = "SELECT * FROM Account WHERE IsDeleted = 0";
+$result = $connection->query($sql);
+
+if (!$result) {
+    trigger_error('Invalid query: ' . $connection->error);
 }
 ?>
 
@@ -48,8 +57,8 @@ if(isset($_POST['delete'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clients</title>
-    <link rel="stylesheet" href="../css/index.css">
+    <title>Accounts</title>
+    <link rel="stylesheet" href="../css/manage.css">
     <link rel="stylesheet" href="../css/client.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
@@ -81,14 +90,18 @@ if(isset($_POST['delete'])) {
                             echo "<td>" . $row['Account_id'] . "</td>";
                             echo "<td>" . $row['Account_type'] . "</td>";
                             echo "<td>" . $row['Rate'] . "</td>";
-                            echo "<td>";
-                            echo "<a href='update1.php?id=" . $row['Account_id'] . "'>Update</a>".'&nbsp;&nbsp;';
-                            echo "<a href='delete1.php?id=" . $row['Account_id'] . "'>Delete</a>";
-                            echo "</td>";
+                            echo "<td>
+                                    <a href='update1.php?id=" . $row['Account_id'] . "'>Update</a>
+                                    &nbsp;&nbsp;
+                                    <form method='post' action='manageAccounts.php' style='display:inline;' onsubmit='return confirmDelete();'>
+                                        <input type='hidden' name='user_id' value='" . $row['Account_id'] . "'>
+                                        <button type='submit' name='delete'>Delete</button>
+                                    </form>
+                                  </td>";
                             echo "</tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='10'>No Accounts found</td></tr>";
+                        echo "<tr><td colspan='4'>No Accounts found</td></tr>";
                     }
                     ?>
                 </tbody>
@@ -99,23 +112,11 @@ if(isset($_POST['delete'])) {
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="../script/script.js"></script>
+    <script src="../script/toggle.js"></script>
     <script>
-        let toggle = document.querySelector('.toggle');
-        let navigation = document.querySelector('.navigation');
-        let main = document.querySelector('.main');
-        toggle.onclick = function(){
-            navigation.classList.toggle('active');
-            main.classList.toggle('active');
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this record?");
         }
-
-        let list = document.querySelectorAll('.navigation li');
-        function activeLink(){
-            list.forEach((item) =>
-            item.classList.remove('hovered'));
-            this.classList.add('hovered');
-        }
-        list.forEach((item) =>
-        item.addEventListener('mouseover',activeLink));
     </script>
 </body>
 </html>

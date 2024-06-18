@@ -58,6 +58,14 @@ if (session_status() === PHP_SESSION_NONE) {
             </ul>
             <ul>
                 <li>
+                    <a href="addAccount.php">
+                        <span class="icon"><ion-icon name="people-circle-outline"></ion-icon></span>
+                        <span class="title">Add Accounts</span>
+                    </a>
+                </li>
+            </ul>
+            <ul>
+                <li>
                     <a href="manageAccounts.php">
                         <span class="icon"><ion-icon name="settings-outline"></ion-icon></span>
                         <span class="title">Manage Accounts</span>

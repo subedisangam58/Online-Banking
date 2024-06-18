@@ -26,7 +26,7 @@
             <div class="dropdown">
                 <button class="dropbtn">Login <i class="fas fa-caret-down"></i></button>
                 <div class="dropdown-content">
-                    <a href="login.php">Client Login</a>
+                    <a href="client/login.php">Client Login</a>
                     <a href="admin/login.php">Admin Login</a>
                 </div>
             </div>
