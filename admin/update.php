@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../connection.php';
-
+$msg = '';
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['user_id'])) {
     $userId = $_GET['user_id'];
     
@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['user_id'])) {
         $email = $row['Email'];
         $address = $row['Address'];
     } else {
-        echo "User not found.";
+        $msg = "User not found.";
     }
 } else {
 }
@@ -44,10 +44,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         WHERE user_id = $user_id";
         
         if ($connection->query($update_query) === TRUE) {
-            echo "Record updated successfully";
+            $msg = "Record updated successfully";
             header("Location: clients.php");
         } else {
-            echo "Error updating record: " . $connection->error;
+            $msg = "Error updating record: " . $connection->error;
         }
     }
 }
@@ -73,6 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
 
         <h1>Update User</h1>
+        <?php echo $msg; ?>
         <form method="post">
             <label for="name">Name:</label><br>
             <input type="text" id="name" name="name" value="<?php echo $name; ?>"><br><br>
@@ -98,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script src="toggle.js"></script>
+    <script src="../script/toggle.js"></script>
 </body>
 </html>
 

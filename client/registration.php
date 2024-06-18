@@ -1,114 +1,102 @@
 <?php
+session_start();
 error_reporting(0);
 $err = [];
+$bankCode = 'EB';
+$bankPrefix = '12345678';
 $name = $email = $phone = $password = $address = $nationalID = $accType = $accNumber = '';
-if($_SERVER['REQUEST_METHOD']=='POST'){
-    
-    if(isset($_POST['name']) && !empty($_POST['name']) && trim($_POST['name'])){
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    if (isset($_POST['name']) && !empty($_POST['name']) && trim($_POST['name'])) {
         $name = trim($_POST['name']);
-        if(!preg_match("/^([A-Z][a-z\s]+)+$/",$name)){
+        if (!preg_match("/^([A-Z][a-z\s]+)+$/", $name)) {
             $err['name'] = 'Enter valid name';
         }
-    }
-    else{
+    } else {
         $err['name'] = 'Enter full name';
     }
 
-    if(isset($_POST['email']) && !empty($_POST['email']) && trim($_POST['email'])){
+    if (isset($_POST['email']) && !empty($_POST['email']) && trim($_POST['email'])) {
         $email = trim($_POST['email']);
-        if(!preg_match("/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/",$email)){
+        if (!preg_match("/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/", $email)) {
             $err['email'] = "Enter valid email";
         }
-    }
-    else{
+    } else {
         $err['email'] = 'Enter your email';
     }
 
-    if(isset($_POST['password']) && !empty($_POST['password']) && trim($_POST['password'])){
+    if (isset($_POST['password']) && !empty($_POST['password']) && trim($_POST['password'])) {
         $password = trim($_POST['password']);
         $encrypted_password = md5($password);
-        if(!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/",$password)){
+        if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/", $password)) {
             $err['password'] = 'Enter valid password';
         }
-    }
-    else{
+    } else {
         $err['password'] = 'Enter password';
     }
 
-    if(isset($_POST['phone']) && !empty($_POST['phone']) && trim($_POST['phone'])){
+    if (isset($_POST['phone']) && !empty($_POST['phone']) && trim($_POST['phone'])) {
         $phone = trim($_POST['phone']);
-        if(!preg_match("/(\+977)?[9][6-9]\d{8}/",$phone)){
+        if (!preg_match("/(\+977)?[9][6-9]\d{8}/", $phone)) {
             $err['phone'] = "Enter valid phone number";
         }
-    }
-    else{
+    } else {
         $err['phone'] = 'Enter your phone';
     }
 
-    if(isset($_POST['address']) && !empty($_POST['address']) && trim($_POST['address'])){
+    if (isset($_POST['address']) && !empty($_POST['address']) && trim($_POST['address'])) {
         $address = trim($_POST['address']);
-    }
-    else{
+    } else {
         $err['address'] = 'Enter your address';
     }
 
-    if(isset($_POST['nationalID']) && !empty($_POST['nationalID']) && trim($_POST['nationalID'])){
+    if (isset($_POST['nationalID']) && !empty($_POST['nationalID']) && trim($_POST['nationalID'])) {
         $nationalID = trim($_POST['nationalID']);
-    }
-    else{
+    } else {
         $err['nationalID'] = 'Enter your national id';
     }
 
-    if(isset($_POST['accType']) && !empty($_POST['accType']) && trim($_POST['accType'])){
+    if (isset($_POST['accType']) && !empty($_POST['accType']) && trim($_POST['accType'])) {
         $accType = trim($_POST['accType']);
-    }
-    else{
+    } else {
         $err['accType'] = 'Select your account type';
     }
 
-    if(isset($_POST['accNumber']) && !empty($_POST['accNumber']) && trim($_POST['accNumber'])){
+    if (isset($_POST['accNumber']) && !empty($_POST['accNumber']) && trim($_POST['accNumber'])) {
         $accNumber = trim($_POST['accNumber']);
-        if(!preg_match("/^\d{16}$/",$accNumber)){
-            $err['accNumber'] = 'Enter valid account number';
+        if (!preg_match("/^\d{16}$/", $accNumber) || substr($accNumber, 0, 8) !== $bankPrefix) {
+            $err['accNumber'] = 'Enter valid account number with correct bank prefix';
         }
-    }
-    else{
+    } else {
         $err['accNumber'] = 'Enter your account Number';
     }
 
     if (!isset($_POST['terms'])) {
         $err['terms'] = 'Please accept terms and conditions';
     }
-    if (isset($_POST['submit'])) {
-        // Process registration form
-        if (count($err) == 0) {
-            try {
-                require_once 'connection.php';
-                $user_id = $_SESSION['admin_id'];
-                $m = date('m');
-                $d = date('d');
-                $cid = "CLI{$m}{$d}-" . rand(100, 999);
-                $accType = $_POST['accType'];
-                $sql = "SELECT Account_id FROM account WHERE account_type = '$accType'";
-                $result = mysqli_query($connection, $sql);
-                if ($result && mysqli_num_rows($result) > 0) {
-                    $row = mysqli_fetch_assoc($result);
-                    $account_id = $row['Account_id'];
-                $sql = "INSERT INTO users(name,email,password,phone,address,National_ID,Client_id,account_id,account_number)
-                VALUES('$name','$email','$encrypted_password',$phone,'$address',$nationalID,'$cid',$account_id,$accNumber)";
+
+    if (count($err) == 0) {
+        try {
+            require_once '../connection.php';
+            $m = date('m');
+            $d = date('d');
+            $cid = "CLI{$m}{$d}-" . rand(100, 999);
+            $sql = "SELECT Account_id FROM account WHERE Account_type = '$accType'";
+            $result = mysqli_query($connection, $sql);
+            if ($result && mysqli_num_rows($result) > 0) {
+                $row = mysqli_fetch_assoc($result);
+                $account_id = $row['Account_id'];
+                $sql = "INSERT INTO users(Name, Email, Password, Phone, Address, National_id, Client_id, Account_id, Account_Number)
+                VALUES ('$name', '$email', '$encrypted_password', $phone, '$address', $nationalID, '$cid', $account_id, $accNumber)";
                 mysqli_query($connection, $sql);
                 echo 'Registration Successful.';
-                } else{
-                    echo 'Error: Account type not found';
-                }
-            } catch (Exception $ex) {
-                die('Database Error:' . $ex->getMessage());
+            } else {
+                echo 'Error: Account type not found';
             }
+        } catch (Exception $ex) {
+            die('Database Error:' . $ex->getMessage());
         }
-    } elseif (isset($_POST['login'])) {
-        // Redirect to login page
-        header("Location: index.php");
-        exit();
     }
 }
 ?>
@@ -118,7 +106,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Form</title>
-    <link rel="stylesheet" href="registration.css">
+    <link rel="stylesheet" href="../css/registration.css">
 </head>
 <body>
     <div class=front-logo>

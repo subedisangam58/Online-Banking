@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'connection.php';
+require_once '../connection.php';
 $err = [];
 $msg = '';
 $user_id = $_SESSION['admin_id'];
@@ -15,15 +15,15 @@ if ($result && mysqli_num_rows($result) > 0) {
 
 $amount = $receiverName = $phone = '';
 if($_SERVER['REQUEST_METHOD']=='POST'){
-    if(isset($_POST['amount']) && !empty($_POST['amount'])) { 
+    if (isset($_POST['amount']) && !empty($_POST['amount'])) { 
         $amount = $_POST['amount'];  
-        if(!preg_match("/^\d+(\.\d{1,2})?$/",  $amount)) {
-            $err['amount']= 'Invalid amount format! Please enter a valid amount in Rs';
+        if (!is_numeric($amount) || $amount <= 0) {
+            $err['amount'] = 'Invalid amount format! Please enter a valid positive numeric value.';
         }
-    }
-    else{
+    } else {
         $err['amount'] = 'Enter the required amount.';
     }
+    
 
     if(isset($_POST['phone']) && !empty($_POST['phone'])) { 
         $phone = $_POST[ 'phone'];  
@@ -46,16 +46,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     }
 
     if(count($err) == 0){
-        $otp = rand(100000, 999999);
-        // Send OTP via email
-        $to = $_SESSION['admin_email']; // Assuming the session variable contains the user's email
-        $subject = 'Withdrawal OTP';
-        $message = 'Your OTP for withdrawal is: ' . $otp;
-        $headers = 'From: sangamsubedi58@gmail.com'; // Update with your email
-        mail($to, $subject, $message, $headers);
-        $_SESSION['withdrawal_otp'] = $otp;
-
-        require_once 'connection.php';
         $user_id = $_SESSION['admin_id'];
         $current_date = date('Y-m-d');
         
@@ -81,8 +71,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Withdrawals</title>
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="account.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/account.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -126,7 +116,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                 </div>
 
                 <label for="amount">Withdrawal Amount</label>
-                <input type="text" name="amount" id="amount">
+                <input type="number" name="amount" id="amount" min="0" step="any">
                 <?php echo isset($err['amount']) ? $err['amount'] : ''; ?>
 
                 <div class="button">
@@ -139,8 +129,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 </div>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script src="admin/toggle.js"></script>
-    <script src="script.js"></script>
+    <script src="../script/toggle.js"></script>
+    <script src="../script/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const selfOption = document.getElementById('self');

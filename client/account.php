@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'connection.php';
+require_once '../connection.php';
 $user_id = $_SESSION['admin_id'];
 $query = "SELECT * FROM users WHERE user_id = $user_id";
 $result = mysqli_query($connection, $query);
@@ -18,14 +18,14 @@ if ($result && mysqli_num_rows($result) > 0) {
 
 $folder = $msg = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $upload_directory = $_SERVER['DOCUMENT_ROOT'] . "/new/image/";
+    $upload_directory = $_SERVER['DOCUMENT_ROOT'] . "/OnlineBanking/image/";
     $filename = $_FILES["profile"]["name"];
     $tempname = $_FILES["profile"]["tmp_name"];
     $destination = $upload_directory . $filename;
 
     if (!empty($filename)) {
         if (move_uploaded_file($tempname, $destination)) {
-            $folder = "/new/image/" . $filename;
+            $folder = "/OnlineBanking/image/" . $filename;
             $sql = "UPDATE users SET Profile='$folder' WHERE user_id=$user_id";
             mysqli_query($connection, $sql);
         } else {
@@ -38,8 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $new_nid = $_POST['nid'];
     $new_address = $_POST['address'];
     $new_phone = $_POST['phone'];
-    $status = $_POST['Status'];
-    $update_query = "UPDATE users SET Name='$new_name', Email='$new_email', National_id='$new_nid', Address='$new_address', Phone='$new_phone', Status=$status WHERE user_id=$user_id";
+    $update_query = "UPDATE users SET Name='$new_name', Email='$new_email', National_id='$new_nid', Address='$new_address', Phone='$new_phone' WHERE user_id=$user_id";
     $update_result = mysqli_query($connection, $update_query);
 
     if ($update_result) {
@@ -55,8 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account</title>
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="account.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/account.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -111,7 +110,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script src="script.js"></script>
-    <script src="admin/toggle.js"></script>
+    <script src="../script/toggle.js"></script>
 </body>
 </html>

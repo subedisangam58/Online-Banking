@@ -1,11 +1,11 @@
 <?php
 session_start();
-/*if(!isset($_SESSION['admin_id'])){
-    header('location:index.php?err=1');
+if(!isset($_SESSION['admin_id'])){
+    header('location:login.php?err=1');
     exit;
-}*/
+}
 require_once '../connection.php';
-//$user_id = $_SESSION['admin_id'];
+$user_id = $_SESSION['admin_id'];
 $sql = "SELECT * FROM Account";
 $result = $connection->query($sql);
 
@@ -14,7 +14,6 @@ if (!$result) {
 }
 
 if(isset($_POST['update'])) {
-    // Update query
     $update_query = "UPDATE users SET 
                     Name = '$name',
                     Client_id = '$client_id',
@@ -25,22 +24,21 @@ if(isset($_POST['update'])) {
                     WHERE User_id = $userIdToUpdate";
     
     if ($connection->query($update_query) === TRUE) {
-        echo "Record updated successfully";
+        $msg = "Record updated successfully";
     } else {
-        echo "Error updating record: " . $connection->error;
+        $msg = "Error updating record: " . $connection->error;
     }
 }
-
+$msg = '';
 if(isset($_POST['delete'])) {
     $delete_query = "DELETE FROM users WHERE User_id = $userIdToDelete";
     
     if ($connection->query($delete_query) === TRUE) {
-        echo "Record deleted successfully";
-        // Optionally, you can redirect the user or refresh the page after deletion
-        // header("Location: clients.php");
-        // exit();
+        $msg = "Record deleted successfully";
+        header("Location: clients.php");
+        exit();
     } else {
-        echo "Error deleting record: " . $connection->error;
+        $msg = "Error deleting record: " . $connection->error;
     }
 }
 ?>
@@ -51,8 +49,8 @@ if(isset($_POST['delete'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clients</title>
-    <link rel="stylesheet" href="../index.css">
-    <link rel="stylesheet" href="client.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/client.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -65,6 +63,7 @@ if(isset($_POST['delete'])) {
         </div>
         <div class="transactions">
             <h1>Manage Accounts</h1>
+            <?php echo $msg; ?>
             <table cellspacing=0>
                 <thead>
                     <tr>
@@ -99,7 +98,7 @@ if(isset($_POST['delete'])) {
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script src="../script.js"></script>
+    <script src="../script/script.js"></script>
     <script>
         let toggle = document.querySelector('.toggle');
         let navigation = document.querySelector('.navigation');

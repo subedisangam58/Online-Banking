@@ -23,6 +23,7 @@ if(isset($_POST['submit'])) {
     $sql = "SELECT * FROM Account WHERE Account_id = $account_id";
     $result = $connection->query($sql);
     $row = $result->fetch_assoc();
+}
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +34,6 @@ if(isset($_POST['submit'])) {
     <title>Update Account</title>
 </head>
 <body>
-    <?php include('navbar.php'); ?>
     <?php include('navbar.php'); ?>
     <div class="main">
         <div class="topbar">
@@ -55,8 +55,3 @@ if(isset($_POST['submit'])) {
     </div>
 </body>
 </html>
-
-<?php
-}
-$connection->close();
-?>

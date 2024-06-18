@@ -27,6 +27,7 @@ input[type="text"],
 input[type="email"],
 input[type="tel"],
 input[type="password"],
+input[type="number"],
 input[type="file"] {
     width: 98%;
     padding: 10px;
@@ -105,7 +106,18 @@ img{
     margin-right: auto;
 }
 
+.verified-text {
+    color: green;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
 
-
-
-
+.profile-img {
+    display: block;
+    margin: 0 auto;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+}

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'connection.php';
+require_once '../connection.php';
 $user_id = $_SESSION['admin_id'];
 $sql = "SELECT * FROM transactions WHERE Tuser_id = $user_id";
 $result = $connection->query($sql);
@@ -16,10 +16,10 @@ if (!$result) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transactions</title>
-    <link rel="stylesheet" href="transaction.css">
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="account.css">
-    <link rel="stylesheet" href="admin/client.css">
+    <link rel="stylesheet" href="../css/transaction.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/account.css">
+    <link rel="stylesheet" href="../css/client.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
@@ -77,6 +77,6 @@ if (!$result) {
             </div>
         </div>    
     </div>
-    <script src="admin/toggle.js"></script>
+    <script src="../script/toggle.js"></script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 session_start();
 $err = [];
 if(isset($_POST['login'])){
-    require_once 'connection.php';
+    require_once '../connection.php';
     if(isset($_POST['email']) && !empty($_POST['email']) && trim($_POST['email'])){
         $email = $_POST['email'];
         if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
@@ -45,11 +45,11 @@ if(isset($_POST['login'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
     <div class=front-logo>
-        <img src="images/logo.svg" alt="Internet Banking">
+        <img src="../images/logo.svg" alt="Internet Banking">
         <figcaption>Your first choice for monetary needs</figcaption>
     </div>
     <div class="container">
