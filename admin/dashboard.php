@@ -69,6 +69,7 @@ if (!$result) {
     <title>Dashboard</title>
     <link rel="stylesheet" href="../css/index.css">
     <link rel="stylesheet" href="../css/client.css">
+    <link rel="stylesheet" href="../css/transaction.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -137,7 +138,7 @@ if (!$result) {
                 </div>
             </div>
         </div>
-        <div class="transactions">
+        <div class="table">
             <table cellspacing=0>
                 <thead>
                     <tr>
@@ -148,7 +149,6 @@ if (!$result) {
                         <th>Amount</th>
                         <th>Date</th>
                         <th>Remarks</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -164,12 +164,6 @@ if (!$result) {
                             echo "<td>" . $row['Amount'] . "</td>";
                             echo "<td>" . $row['Date'] . "</td>";
                             echo "<td>" . $row['Remarks'] . "</td>";
-                            echo "<td>";
-                            echo "<form action='rollback.php' method='post'>";
-                            echo "<input type='hidden' name='transaction_id' value='" . $row['Transaction_id'] . "'>";
-                            echo "<button type='submit'>Rollback</button>";
-                            echo "</form>";
-                            echo "</td>";
                             echo "</tr>";
                             $count++;
                         }

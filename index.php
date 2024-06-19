@@ -129,11 +129,11 @@
             <h2>Start banking <span>with us.</span></h2>
             <p>Open bank account without any paper work!</p>
             <div class="open-account-card">
-                <img src="image/open-account.jpg" alt="Open Account Online">
+                <img src="image/online.jpg" alt="Open Account Online">
                 <div class="open-account-text">
                     <h3>Open Account <span>Online</span></h3>
                     <p>Open an account online with just a click of a button anytime, anywhere.</p>
-                    <a href="registration.php" class="visit-now">Visit Now</a>
+                    <a href="client/registration.php" class="visit-now">Visit Now</a>
                 </div>
             </div>
         </div>

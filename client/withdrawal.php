@@ -4,12 +4,10 @@ require_once '../connection.php';
 $err = [];
 $msg = '';
 $user_id = $_SESSION['admin_id'];
-$query = "SELECT * FROM users
-WHERE user_id = $user_id";
+$query = "SELECT * FROM users WHERE user_id = $user_id";
 $result = mysqli_query($connection, $query);
 if ($result && mysqli_num_rows($result) > 0) {
     $user_data = mysqli_fetch_assoc($result);
-    $name = $user_data['Name'];
     $account_amount = $user_data['Amount'];
 }
 
@@ -25,40 +23,34 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     }
     
 
-    if(isset($_POST['phone']) && !empty($_POST['phone'])) { 
-        $phone = $_POST[ 'phone'];  
-        if(!preg_match("/^\d{10}$/",  $phone)) {
-            $err['phone']= 'Invalid  Number! Please enter a valid 10 digit number';
+    if ($_POST['user'] == 'other') {
+        if (empty($_POST['receiverName']) || !preg_match("/^([A-Z][a-z\s]+)+$/", trim($_POST['receiverName']))) {
+            $err['receiverName'] = 'Enter a valid name.';
+        } else{
+            $receiverName = trim($_POST['receiverName']);
         }
-    }
-    else{
-        $err['phone'] = 'Enter the phone number';
-    }
 
-    if(isset($_POST['receiverName']) && !empty($_POST['receiverName']) && trim($_POST['receiverName'])){
-        $receiverAcName = trim($_POST['receiverName']);
-        if(!preg_match("/^([A-Z][a-z\s]+)+$/",$receiverAcName)){
-            $err['receiverName'] = 'Enter valid name';
+        if (empty($_POST['phone']) || !preg_match("/^\d{10}$/", $_POST['phone'])) {
+            $err['phone'] = 'Invalid number! Please enter a valid 10 digit number.';
+        } else{
+            $phone = $_POST['phone'];
         }
-    }
-    else{
-        $err['receiverName'] = 'Enter full name';
     }
 
     if(count($err) == 0){
         $user_id = $_SESSION['admin_id'];
         $current_date = date('Y-m-d');
-        
+        $Tid = "TRN" . date('md') . rand(100, 999);
         // Check if withdrawal amount is less than or equal to account balance
         if($amount <= $account_amount) {
-            $Tid = "TRN" . date('md') . rand(100,999);
-            $sql = "INSERT INTO transactions(Transaction_id, Receiver_Bank_Name, Receiver_Bank_Number, Receiver_Account_Name, Phone, Amount, Date, Remarks, Tuser_id)
-                    VALUES('$Tid', '', '', '', '', -$amount, '$current_date', 'Withdrawal', $user_id)";
+            $sql = "INSERT INTO transactions (Transaction_id, Receiver_Bank_Name, Receiver_Bank_Number, Receiver_Account_Name, Phone, Amount, Date, Remarks, Tuser_id)
+                VALUES ('$Tid', '', '', '$receiverName', '$phone', $amount, '$current_date', 'Withdrawal', $user_id)";
             mysqli_query($connection, $sql);
 
-            $update_query = "UPDATE account SET account_amount = account_amount - $amount WHERE account_id = {$user_data['account_id']}";
+            $update_query = "UPDATE users SET Amount = Amount - $amount WHERE user_id = $user_id";
             mysqli_query($connection, $update_query);
             $msg = 'Withdrawal successful.';
+            $account_amount -= $amount;
         } else {
             $err['amount'] = 'Withdrawal amount exceeds account balance.';
         }
@@ -133,22 +125,29 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     <script src="../script/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const selfOption = document.getElementById('self');
-            const otherOption = document.getElementById('other');
-            const otherFields = document.getElementById('otherFields');
+        const selfOption = document.getElementById('self');
+        const otherOption = document.getElementById('other');
+        const otherFields = document.getElementById('otherFields');
+        const receiverName = document.getElementById('receiverName');
+        const phone = document.getElementById('phone');
 
-            selfOption.addEventListener('change', function() {
-                if (this.checked) {
-                    otherFields.style.display = 'none';
-                }
-            });
+        function toggleFields() {
+            if (selfOption.checked) {
+                otherFields.style.display = 'none';
+                receiverName.removeAttribute('required');
+                phone.removeAttribute('required');
+            } else if (otherOption.checked) {
+                otherFields.style.display = 'block';
+                receiverName.setAttribute('required', 'required');
+                phone.setAttribute('required', 'required');
+            }
+        }
 
-            otherOption.addEventListener('change', function() {
-                if (this.checked) {
-                    otherFields.style.display = 'block';
-                }
-            });
-        });
+        selfOption.addEventListener('change', toggleFields);
+        otherOption.addEventListener('change', toggleFields);
+
+        toggleFields(); // Run on page load to set initial state
+    });
     </script>
 </body>
 </html>

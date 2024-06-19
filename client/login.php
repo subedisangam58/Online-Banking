@@ -48,8 +48,9 @@ if(isset($_POST['login'])){
     <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
+    <div class="contain">
     <div class=front-logo>
-        <img src="../images/logo.svg" alt="Internet Banking">
+        <img src="../image/logo.png" alt="Internet Banking">
         <figcaption>Your first choice for monetary needs</figcaption>
     </div>
     <div class="container">
@@ -87,6 +88,7 @@ if(isset($_POST['login'])){
                 </div>
             </div>
         </form>
+    </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>

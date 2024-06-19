@@ -1,27 +1,18 @@
 <?php
 session_start();
 require_once '../connection.php';
+
 if (!$connection) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
-$user_id = $_SESSION['admin_id'] ?? null;
-
-// Check if the admin is logged in
-if (!$user_id) {
-    die("Unauthorized access. Admin must be logged in.");
-}
-
-$sql = "SELECT *, IF(status = 1, 'Verified', 'Verify') AS status_text FROM users";
+$sql = "SELECT * FROM users";
 $result = $connection->query($sql);
 
-// Check if the query execution was successful
 if ($result === false) {
     trigger_error('Invalid query: ' . $connection->error);
-    $result = null;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,64 +43,70 @@ if ($result === false) {
             </div>
         </div>
         <div class="history">
-        <h1>eBanking Clients</h1>
-        <h4>Select on any action to manage your clients</h4>
-        <form id="transaction-display-form">
-            <label for="transaction-count">Number of Clients:</label>
-            <select id="transaction-count" name="transaction-count">
-                <option value="10" selected>10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-            </select>
-        </form>
-        <div class="table">
-        <table>
-                <thead>
-                    <tr>
-                        <th>S.N</th>
-                        <th>Name</th>
-                        <th>Client Number</th>
-                        <th>National ID</th>
-                        <th>Contact</th>
-                        <th>Email</th>
-                        <th>Address</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $count = 1;
-                    if ($result && $result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            // Use isset or array_key_exists to check if 'status' key exists
-                            $statusText = isset($row['status']) && $row['status'] == 1 ? 'Verified' : 'Verify';
+            <h1>eBanking Clients</h1>
+            <h4>Select on any action to manage your clients</h4>
+            <form id="transaction-display-form">
+                <label for="transaction-count">Number of Clients:</label>
+                <select id="transaction-count" name="transaction-count">
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </form>
+            <div class="table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S.N</th>
+                            <th>Name</th>
+                            <th>Client Number</th>
+                            <th>National ID</th>
+                            <th>Contact</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Action</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $count = 1;
+                        if ($result && $result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $statusText = isset($row['status_text']) ? $row['status_text'] : 'Verify';
+                                $verifiedClass = isset($row['status']) && $row['status'] == 1 ? 'verified' : '';
 
-                            echo "<tr>";
-                            echo "<td>" . $count . "</td>";
-                            echo "<td>" . htmlspecialchars($row['Name']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['Client_id']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['National_id']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['Phone']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['Email']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['Address']) . "</td>";
-                            echo "<td>";
-                            echo "<a href='update.php?user_id=" . urlencode($row['user_id']) . "'>Update</a> &nbsp;&nbsp;";
-                            echo "<a href='delete.php?user_id=" . urlencode($row['user_id']) . "'>Delete</a>";
-                            echo "</td>";
-                            echo "<td><a href='#' class='verify-link " . ($statusText === 'Verified' ? 'verified' : '') . "' data-user-id='" . htmlspecialchars($row['user_id']) . "'>$statusText</a></td>";
-                            echo "</tr>";
-                            $count++;
+                                echo "<tr>";
+                                echo "<td>" . $count . "</td>";
+                                echo "<td>" . htmlspecialchars($row['Name']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['Client_id']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['National_id']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['Phone']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['Email']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['Address']) . "</td>";
+                                echo "<td>";
+                                echo "<a href='update.php?user_id=" . urlencode($row['user_id']) . "'>Update</a> &nbsp;&nbsp;";
+                                echo "<a href='delete.php?user_id=" . urlencode($row['user_id']) . "'>Delete</a>";
+                                echo "</td>";
+                                echo "<td>";
+                                if (array_key_exists('Status', $row) && $row['Status'] == 1) {
+                                    echo "<span class='verified'>Verified</span>";
+                                } else {
+                                    echo "<span class='verify-btn' data-user-id='" . $row['user_id'] . "'>Verify</span>";
+                                }
+                                echo "</td>";
+                                echo "</tr>";
+                                $count++;
+                            }
+                        } else {
+                            echo "<tr><td colspan='9'>No clients found or failed to fetch data.</td></tr>";
                         }
-                    } else {
-                        echo "<tr><td colspan='9'>No clients found or failed to fetch data.</td></tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        </div>    
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
@@ -119,38 +116,32 @@ if ($result === false) {
     <script src="../script/toggle.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const verifyLinks = document.querySelectorAll('.verify-link');
+            const verifyButtons = document.querySelectorAll('.verify-btn');
 
-            verifyLinks.forEach(link => {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault(); 
+            verifyButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
                     const userId = this.dataset.userId;
                     
-                    fetch('verify.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ user_id: userId })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            this.textContent = 'Verified';
-                            this.classList.add('verified');
-                            this.classList.remove('verify-link');
-                            this.removeEventListener('click', arguments.callee); // Disable future clicks
-                        } else {
-                            alert('Verification failed: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred. Please try again.');
-                    });
+                    // Send AJAX request to update status
+                    fetch('verify.php?user_id=' + userId)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Update UI to show "Verified"
+                                this.textContent = 'Verified';
+                                this.classList.add('verified');
+                            } else {
+                                alert('Failed to verify user.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Failed to verify user.');
+                        });
                 });
             });
         });
     </script>
+
 </body>
 </html>

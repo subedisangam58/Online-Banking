@@ -102,7 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (count($err) == 0) {
-        require_once 'connection.php';
         $user_id = $_SESSION['admin_id'];
         $m = date('m');
         $d = date('d');
@@ -177,6 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label for="receiverBank">Receiver's Bank</label>
                 <select name="receiverBank" id="receiverBank">
                     <option value="">---Select Bank---</option>
+                    <option value="eBank" <?php if ($receiverBank === "eBank") echo "selected" ?>>eBank</option>
                     <option value="nic" <?php if ($receiverBank === "nic") echo "selected" ?>>NIC Asia</option>
                     <option value="kumariBank" <?php if ($receiverBank === "kumariBank") echo "selected" ?>>Kumari Bank</option>
                     <option value="badigya" <?php if ($receiverBank === "badigya") echo "selected" ?>>Badigya Bank</option>

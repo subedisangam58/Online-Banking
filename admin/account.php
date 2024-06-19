@@ -2,7 +2,7 @@
 session_start();
 require_once '../connection.php';
 $user_id = $_SESSION['admin_id'];
-$query = "SELECT * FROM admin";
+$query = "SELECT * FROM admin WHERE Admin_id = $user_id";
 $result = mysqli_query($connection, $query);
 if ($result && mysqli_num_rows($result) > 0) {
     $user_data = mysqli_fetch_assoc($result);
@@ -10,7 +10,7 @@ if ($result && mysqli_num_rows($result) > 0) {
     $email = $user_data['Email'];
     $adminId = $user_data['Admin_number'];
 }
-
+$msg = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $new_name = $_POST['name'];
     $new_email = $_POST['email'];
@@ -54,13 +54,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
             <div class="form">
                 <h2>Update Profile</h2>
+                <?php echo $msg; ?>
                 <form action="" method="post" enctype="multipart/form-data">
                     <label for="name">Name</label>
                     <input type="text" name="name" id="name" value="<?php echo $name; ?>">
                     <label for="email">Email</label>
                     <input type="email" name="email" id="email" value="<?php echo $email; ?>"><br>
                     <label for="adminId">Admin ID</label>
-                    <input type="text" name="adminId" id="adminId" value="<?php echo $adminId; ?>"><br>
+                    <input type="text" name="adminId" id="adminId" readonly value="<?php echo $adminId; ?>"><br>
                     <input type="submit" value="Update Profile">
                 </form>
             </div>

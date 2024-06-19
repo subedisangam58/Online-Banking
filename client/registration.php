@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <div class=front-logo>
-        <img src="images/logo.svg" alt="Internet Banking">
+        <img src="images/logo.png" alt="Internet Banking">
         <figcaption>Hello, Sign in and Do e-Banking</figcaption>
     </div>
     <div class="container">
@@ -167,9 +167,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <?php echo isset($err['terms'])?$err['terms']:''; ?>
                 </div>
                 <input type="submit" value="Submit" name="submit">
-                <input type="submit" value="Login" name="login">
+                <input type="submit" value="Login" id="login" onclick="redirectToLogin(event)">
             </div>
         </form>
     </div>
+    <script>
+        function redirectToLogin(event) {
+            event.preventDefault(); // Prevent the form from submitting
+            window.location.href = 'login.php';
+        }
+    </script>
 </body>
 </html>

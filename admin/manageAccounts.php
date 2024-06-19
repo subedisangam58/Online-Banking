@@ -91,8 +91,7 @@ if (!$result) {
                             echo "<td>" . $row['Account_type'] . "</td>";
                             echo "<td>" . $row['Rate'] . "</td>";
                             echo "<td>
-                                    <a href='update1.php?id=" . $row['Account_id'] . "'>Update</a>
-                                    &nbsp;&nbsp;
+                                    <a class='button' href='update1.php?id=" . $row['Account_id'] . "'>Update</a>
                                     <form method='post' action='manageAccounts.php' style='display:inline;' onsubmit='return confirmDelete();'>
                                         <input type='hidden' name='user_id' value='" . $row['Account_id'] . "'>
                                         <button type='submit' name='delete'>Delete</button>

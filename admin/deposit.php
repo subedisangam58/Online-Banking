@@ -16,13 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Validate client ID
-    if (empty($client_id) || !is_numeric($client_id)) {
+    if (empty($client_id)) {
         $err['client_id'] = 'Please enter a valid client ID.';
     }
 
     if (count($err) == 0) {
+        // Escape inputs
+        $client_id = mysqli_real_escape_string($connection, $client_id);
+        $amount = mysqli_real_escape_string($connection, $amount);
+
         // Find the user
-        $query = "SELECT * FROM users WHERE client_id = $client_id";
+        $query = "SELECT * FROM users WHERE Client_id = '$client_id'";
         $result = mysqli_query($connection, $query);
 
         if ($result && mysqli_num_rows($result) > 0) {
@@ -32,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Update user's balance
             $new_balance = $current_balance + $amount;
-            $update_query = "UPDATE users SET Amount = $new_balance WHERE client_id = $client_id";
+            $update_query = "UPDATE users SET Amount = '$new_balance' WHERE Client_id = '$client_id'";
             $update_result = mysqli_query($connection, $update_query);
 
             if ($update_result) {

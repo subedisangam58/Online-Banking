@@ -2,6 +2,10 @@
     box-sizing: border-box;
 }
 
+body{
+    background-color: #E4F1FF;
+}
+
 .front-logo {
     position: relative;
     left: 8%;
@@ -10,8 +14,9 @@
 }
 
 .front-logo img {
-    height: 78.6px;
-    width: 234.8px;
+    height: 300px;
+    width: 300px;
+    border-radius: 150px;
 }
 
 .container{
@@ -45,4 +50,8 @@ input[type*=submit]{
 
 .register{
     margin: 4% 20%;
+}
+
+figcaption{
+    text-align: end;
 }

@@ -213,6 +213,7 @@ nav ul li a:hover, .more-about-us:hover, .visit-now:hover {
 
 .open-account-card img {
     max-width: 150px;
+    height: 100px;
     margin-right: 20px;
     border-radius: 10px;
 }

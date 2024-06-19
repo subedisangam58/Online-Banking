@@ -1,32 +1,24 @@
 <?php
 require_once '../connection.php';
 
-// Set the header for JSON response
-header('Content-Type: application/json');
-
-// Get the raw POST data
-$data = json_decode(file_get_contents('php://input'), true);
-
-if (!isset($data['user_id'])) {
-    echo json_encode(['status' => 'error', 'message' => 'User ID is required']);
-    exit;
+if (!$connection) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
-$user_id = $data['user_id'];
-
-// Prepare the SQL statement
-$sql = "UPDATE users SET status = 1 WHERE user_id = ?";
-$stmt = $connection->prepare($sql);
-
-if ($stmt) {
-    $stmt->bind_param('i', $user_id);
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id'])) {
+    $userId = $_GET['user_id'];
+    $updateSql = "UPDATE users SET status = 1 WHERE user_id = ?";
+    $stmt = $connection->prepare($updateSql);
+    $stmt->bind_param('i', $userId);
     if ($stmt->execute()) {
-        echo json_encode(['status' => 'success']);
+        // Return success response
+        echo json_encode(['success' => true]);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to update status']);
+        // Return error response
+        echo json_encode(['success' => false]);
     }
-    $stmt->close();
 } else {
-    echo json_encode(['status' => 'error', 'message' => 'Failed to prepare statement']);
+    // Handle invalid request
+    echo json_encode(['success' => false]);
 }
 ?>
