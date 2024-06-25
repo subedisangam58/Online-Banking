@@ -79,12 +79,12 @@ if ($result === false) {
 
                                 echo "<tr>";
                                 echo "<td>" . $count . "</td>";
-                                echo "<td>" . htmlspecialchars($row['Name']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['Client_id']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['National_id']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['Phone']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['Email']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['Address']) . "</td>";
+                                echo "<td>" . ($row['Name']) . "</td>";
+                                echo "<td>" . ($row['Client_id']) . "</td>";
+                                echo "<td>" . ($row['National_id']) . "</td>";
+                                echo "<td>" . ($row['Phone']) . "</td>";
+                                echo "<td>" . ($row['Email']) . "</td>";
+                                echo "<td>" . ($row['Address']) . "</td>";
                                 echo "<td>";
                                 echo "<a href='update.php?user_id=" . urlencode($row['user_id']) . "'>Update</a> &nbsp;&nbsp;";
                                 echo "<a href='delete.php?user_id=" . urlencode($row['user_id']) . "'>Delete</a>";

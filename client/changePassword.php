@@ -1,15 +1,14 @@
 <?php
 session_start();
 require_once '../connection.php';
-$name = $_SESSION['admin_name'];
+$name = $_SESSION['client_name'];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $err = [];
-    $email = $_SESSION['admin_email']; 
+    $email = $_SESSION['client_email']; 
     $password = $_POST['password'];
     $nPassword = $_POST['nPassword'];
     $cPassword = $_POST['cPassword'];
 
-    // Prepare and execute SQL statement to fetch user's current password from the database
     $stmt = $connection->prepare("SELECT password FROM users WHERE email = ? LIMIT 1");
     $stmt->bind_param("s", $email);
     $stmt->execute();

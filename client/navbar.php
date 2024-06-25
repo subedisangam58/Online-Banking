@@ -20,7 +20,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <li>
                     <a href="#">
                         <span class="icon"></span>
-                        <span class="title"><?php echo isset($_SESSION['admin_name']) ? $_SESSION['admin_name'] : 'Guest'; ?></span>
+                        <span class="title"><?php echo isset($_SESSION['client_name']) ? $_SESSION['client_name'] : 'Guest'; ?></span>
                     </a>
                 </li>
             </ul>

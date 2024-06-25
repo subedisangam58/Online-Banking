@@ -8,8 +8,8 @@ if (!isset($_SESSION['form_token'])) {
 }
 
 $err = [];
-$user_id = $_SESSION['admin_id'];
-$name = $_SESSION['admin_name'];
+$user_id = $_SESSION['client_id'];
+$name = $_SESSION['client_name'];
 $query = "SELECT * FROM users WHERE user_id = $user_id";
 $result = mysqli_query($connection, $query);
 if ($result && mysqli_num_rows($result) > 0) {
@@ -102,13 +102,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (count($err) == 0) {
-        $user_id = $_SESSION['admin_id'];
+        $user_id = $_SESSION['client_id'];
         $m = date('m');
         $d = date('d');
         $Tid = "TRN{$m}{$d}" . rand(100, 999);
         $current_date = date('Y-m-d');
-        $sql = "INSERT INTO transactions(Transaction_id, Receiver_Bank_Name, Receiver_Bank_Number, Receiver_Account_Name, Phone, Amount, Date, Remarks, Tuser_id)
-                VALUES ('$Tid', '$receiverBank', '$receiverBankAcNo', '$receiverAcName', '$phone', '$amount', '$current_date', '$remarks', '$user_id')";
+        $sql = "INSERT INTO transactions(Transaction_id, Receiver_Bank_Name, Receiver_Bank_Number, Receiver_Account_Name, 
+        Phone, Amount, Date, Remarks, Tuser_id)
+            VALUES ('$Tid', '$receiverBank', '$receiverBankAcNo', '$receiverAcName', '$phone', '$amount', 
+            '$current_date', '$remarks', '$user_id')";
 
         mysqli_begin_transaction($connection);
         if (mysqli_query($connection, $sql)) {
@@ -145,6 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="../css/index.css">
     <link rel="stylesheet" href="../css/account.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
     <?php include('navbar.php'); ?>
@@ -159,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="cardBox">
             <div class="card">
                 <div>
-                    <div class="numbers hidden" data-original-value="<?php echo $account_amount; ?>"><?php echo str_repeat('*', strlen($account_amount)); ?></div>
+                    <div class="numbers hidden" id="balance" data-original-value="<?php echo $account_amount; ?>"><?php echo str_repeat('*', strlen($account_amount)); ?></div>
                     <div class="cardName">Balance</div>
                 </div>
                 <div class="iconBx">
@@ -177,9 +180,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <select name="receiverBank" id="receiverBank">
                     <option value="">---Select Bank---</option>
                     <option value="eBank" <?php if ($receiverBank === "eBank") echo "selected" ?>>eBank</option>
-                    <option value="nic" <?php if ($receiverBank === "nic") echo "selected" ?>>NIC Asia</option>
-                    <option value="kumariBank" <?php if ($receiverBank === "kumariBank") echo "selected" ?>>Kumari Bank</option>
-                    <option value="badigya" <?php if ($receiverBank === "badigya") echo "selected" ?>>Badigya Bank</option>
+                    <option value="NIC Asia" <?php if ($receiverBank === "NIC Asia") echo "selected" ?>>NIC Asia</option>
+                    <option value="Kumari Bank" <?php if ($receiverBank === "Kumari Bank") echo "selected" ?>>Kumari Bank</option>
+                    <option value="Banijya Bank" <?php if ($receiverBank === "Banijya Bank") echo "selected" ?>>Badigya Bank</option>
                 </select>
                 <?php echo isset($err['receiverBank']) ? $err['receiverBank'] : ''; ?>
                 
@@ -203,12 +206,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="text" name="remarks" id="remarks" value="<?php echo htmlspecialchars($remarks); ?>">
                 <?php echo isset($err['remarks']) ? $err['remarks'] : ''; ?><br>
 
-                <input type="submit" value="Proceed">
+                <input type="submit" value="Proceed" id="button" onclick="return submit();">
                 <input type="submit" value="Cancel">
             </form>
         </div>
     </div>
     <script src="../script/toggle.js"></script>
     <script src="../script/script.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#button").click(function(){
+                $("#balance").load("loadAmount.php");
+            });
+        });
+    </script>
 </body>
 </html>

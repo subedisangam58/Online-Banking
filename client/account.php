@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../connection.php';
-$user_id = $_SESSION['admin_id'];
+$user_id = $_SESSION['client_id'];
 $query = "SELECT * FROM users WHERE user_id = $user_id";
 $result = mysqli_query($connection, $query);
 if ($result && mysqli_num_rows($result) > 0) {

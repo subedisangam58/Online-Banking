@@ -1,5 +1,3 @@
-// accountValid.js
-
 document.addEventListener('DOMContentLoaded', function() {
     const accNumberInput = document.getElementById('accNumber');
     const accNumberStatus = document.getElementById('accNumberStatus');

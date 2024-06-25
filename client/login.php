@@ -24,13 +24,13 @@ if(isset($_POST['login'])){
         $result = $connection->query($sql);
         if($result->num_rows == 1){
             $row = $result->fetch_assoc();
-            $_SESSION['admin_id'] = $row['user_id'];
-            $_SESSION['admin_name'] = $row['name'];
-            $_SESSION['admin_email'] = $row['email'];
+            $_SESSION['client_id'] = $row['user_id'];
+            $_SESSION['client_name'] = $row['name'];
+            $_SESSION['client_email'] = $row['email'];
             if(isset($_POST['remember'])){
-                setcookie('admin_id',$row['user_id'],time()+86400*7);
-                setcookie('admin_name',$row['name'],time()+86400*7);
-                setcookie('admin_email',$row['email'],time()+86400*7);
+                setcookie('client_id',$row['user_id'],time()+86400*7);
+                setcookie('client_name',$row['name'],time()+86400*7);
+                setcookie('client_email',$row['email'],time()+86400*7);
             }
             header('Location:dashboard.php');
         } else{

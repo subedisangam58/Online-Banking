@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../connection.php';
-$user_id = $_SESSION['admin_id'];
+$user_id = $_SESSION['client_id'];
 $sql = "SELECT * FROM transactions WHERE Tuser_id = $user_id";
 $result = $connection->query($sql);
 

@@ -85,27 +85,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_update'])) {
         </div>
 
         <h1>Update User</h1>
-        <p><?php echo htmlspecialchars($msg); ?></p>
+        <p><?php echo ($msg); ?></p>
         <?php if ($userId && isset($row)): ?>
         <form method="post">
-            <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($userId); ?>">
+            <input type="hidden" name="user_id" value="<?php echo ($userId); ?>">
             <label for="name">Name:</label><br>
-            <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($name); ?>"><br><br>
+            <input type="text" id="name" name="name" value="<?php echo ($name); ?>"><br><br>
             
             <label for="client_id">Client ID:</label><br>
-            <input type="text" id="client_id" name="client_id" value="<?php echo htmlspecialchars($client_id); ?>" readonly><br><br>
+            <input type="text" id="client_id" name="client_id" value="<?php echo ($client_id); ?>" readonly><br><br>
             
             <label for="national_id">National ID:</label><br>
-            <input type="text" id="national_id" name="national_id" value="<?php echo htmlspecialchars($national_id); ?>"><br><br>
+            <input type="text" id="national_id" name="national_id" value="<?php echo ($national_id); ?>"><br><br>
             
             <label for="phone">Phone:</label><br>
-            <input type="text" id="phone" name="phone" value="<?php echo htmlspecialchars($phone); ?>"><br><br>
+            <input type="text" id="phone" name="phone" value="<?php echo ($phone); ?>"><br><br>
             
             <label for="email">Email:</label><br>
-            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>"><br><br>
+            <input type="email" id="email" name="email" value="<?php echo ($email); ?>"><br><br>
             
             <label for="address">Address:</label><br>
-            <input type="text" id="address" name="address" value="<?php echo htmlspecialchars($address); ?>"><br><br>
+            <input type="text" id="address" name="address" value="<?php echo ($address); ?>"><br><br>
             
             <input type="submit" name="submit_update" value="Update">
         </form>
@@ -118,7 +118,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_update'])) {
     <script src="../script/toggle.js"></script>
 </body>
 </html>
-
-<?php
-$connection->close();
-?>

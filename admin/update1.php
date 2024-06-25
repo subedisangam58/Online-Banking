@@ -25,8 +25,6 @@ if(isset($_POST['submit'])) {
     // Validate and escape the account_id
     if (filter_var($account_id, FILTER_VALIDATE_INT) !== false) {
         $account_id = mysqli_real_escape_string($connection, $account_id);
-
-        // Fetch the account details
         $sql = "SELECT * FROM Account WHERE Account_id = $account_id";
         $result = $connection->query($sql);
 

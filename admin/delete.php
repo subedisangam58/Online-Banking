@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once '../connection.php';
-// Check if user_id parameter is provided and is numeric
 if(isset($_GET['user_id']) && is_numeric($_GET['user_id'])) {
     $user_id = $_GET['user_id'];
     $user_id = $_GET['user_id'];

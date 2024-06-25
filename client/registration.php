@@ -109,9 +109,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="../css/registration.css">
 </head>
 <body>
-    <div class=front-logo>
-        <img src="images/logo.png" alt="Internet Banking">
-        <figcaption>Hello, Sign in and Do e-Banking</figcaption>
+    <div class="header">
+        <img src="../image/logo.png" alt="Internet Banking">
+        <h1>Hello, Sign in and Do e-Banking</h1>
     </div>
     <div class="container">
         <h2>Register here</h2>

@@ -2,14 +2,13 @@
 session_start();
 require_once '../connection.php';
 
-if (!isset($_SESSION['admin_id'])) {
+if (!isset($_SESSION['client_id'])) {
     header('location:login.php?err=1');
     exit;
 }
 
-$user_id = $_SESSION['admin_id'];
+$user_id = $_SESSION['client_id'];
 
-// Fetch user details
 $query = "SELECT * FROM users WHERE user_id = $user_id";
 $result = mysqli_query($connection, $query);
 if ($result && mysqli_num_rows($result) > 0) {
@@ -18,7 +17,6 @@ if ($result && mysqli_num_rows($result) > 0) {
     $account_amount = $user_data['Amount'];
 }
 
-// Fetch transaction count
 $sql = "SELECT COUNT(id) AS transaction_count FROM Transactions WHERE Tuser_id = $user_id";
 $results = mysqli_query($connection, $sql);
 if ($results) {
@@ -28,7 +26,6 @@ if ($results) {
     $transaction_count = "Error: " . mysqli_error($connection);
 }
 
-// Fetch total deposits and withdrawals
 $deposit_sql = "SELECT SUM(amount) AS total_deposit FROM Transactions WHERE Tuser_id = $user_id AND remarks = 'deposit'";
 $withdrawal_sql = "SELECT SUM(amount) AS total_withdrawal FROM Transactions WHERE Tuser_id = $user_id AND remarks = 'withdrawal'";
 $deposit_result = mysqli_query($connection, $deposit_sql);
@@ -36,7 +33,6 @@ $withdrawal_result = mysqli_query($connection, $withdrawal_sql);
 $total_deposit = ($deposit_result && mysqli_num_rows($deposit_result) > 0) ? mysqli_fetch_assoc($deposit_result)['total_deposit'] : 0;
 $total_withdrawal = ($withdrawal_result && mysqli_num_rows($withdrawal_result) > 0) ? mysqli_fetch_assoc($withdrawal_result)['total_withdrawal'] : 0;
 
-// Fetch total amount spent per day in the current month
 $currentDate = date('Y-m-d');
 $firstDayOfMonth = date('Y-m-01');
 $sql = "SELECT DATE(Date) AS transaction_date, SUM(amount) AS total_amount 
@@ -48,17 +44,17 @@ $sql = "SELECT DATE(Date) AS transaction_date, SUM(amount) AS total_amount
 $result = mysqli_query($connection, $sql);
 $labels = array();
 $data = array();
-$daysInMonth = date('t'); // Total days in the current month
+$daysInMonth = date('t');
 $totals = array_fill(1, $daysInMonth, 0); // Initialize totals array with zeroes
 
 if ($result && mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
-        $day = (int)date('j', strtotime($row['transaction_date'])); // Get day of the month
+        $day = (int)date('j', strtotime($row['transaction_date']));
         $totals[$day] = $row['total_amount'];
     }
 }
 
-$labels = range(1, $daysInMonth); // Labels from 1 to the total days in month
+$labels = range(1, $daysInMonth);
 $data = array_values($totals); // Corresponding amounts
 
 ?>
