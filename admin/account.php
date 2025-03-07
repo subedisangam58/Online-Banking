@@ -1,8 +1,8 @@
 <?php
 session_start();
 require_once '../connection.php';
-$user_id = $_SESSION['admin_id'];
-$query = "SELECT * FROM admin WHERE Admin_id = $user_id";
+$admin_id = $_SESSION['admin_id'];
+$query = "SELECT * FROM admin WHERE Admin_id = $admin_id";
 $result = mysqli_query($connection, $query);
 if ($result && mysqli_num_rows($result) > 0) {
     $user_data = mysqli_fetch_assoc($result);
@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $new_name = $_POST['name'];
     $new_email = $_POST['email'];
     $new_adminId = $_POST['adminId'];
-    $update_query = "UPDATE admin SET Name='$new_name', Email='$new_email', Admin_id='$new_adminId' WHERE admin_id=$user_id";
+    $update_query = "UPDATE admin SET Name='$new_name', Email='$new_email', Admin_id='$new_adminId' WHERE admin_id=$admin_id";
     $update_result = mysqli_query($connection, $update_query);
 
     if ($update_result) {

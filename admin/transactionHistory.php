@@ -6,10 +6,10 @@ if (!isset($_SESSION['admin_id'])) {
     exit;
 }
 
-$user_id = $_SESSION['admin_id'];
+$admin_id = $_SESSION['admin_id'];
 $sql = "SELECT transactions.*, users.Account_Number AS 'Acc_Number', users.Name AS 'Acc_Owner' 
         FROM transactions 
-        INNER JOIN users ON transactions.Tuser_id = users.user_id";
+        INNER JOIN users ON transactions.Tuser_id = users.admin_id";
 $result = $connection->query($sql);
 
 if (!$result) {

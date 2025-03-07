@@ -15,6 +15,10 @@
     padding: 8px; /* Padding for options */
 }
 
+.verify-btn{
+    cursor: pointer;
+}
+
 .verify-link {
     display: inline-block;
     padding: 5px 10px;
@@ -33,6 +37,7 @@
 .verified {
     color: #28a745;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .table{

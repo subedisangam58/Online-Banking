@@ -5,7 +5,7 @@ if(!isset($_SESSION['admin_id'])){
     exit;
 }
 require_once '../connection.php';
-$user_id = $_SESSION['admin_id'];
+$admin_id = $_SESSION['admin_id'];
 
 if(isset($_POST['update'])) {
     $update_query = "UPDATE users SET 
@@ -25,7 +25,7 @@ if(isset($_POST['update'])) {
 }
 $msg = '';
 if(isset($_POST['delete'])) {
-    $userIdToDelete = $_POST['user_id'];
+    $userIdToDelete = $_POST['admin_id'];
     
     $delete_query = "UPDATE Account SET IsDeleted = 1 WHERE Account_id = ?";
     if ($stmt = $connection->prepare($delete_query)) {
@@ -93,7 +93,7 @@ if (!$result) {
                             echo "<td>
                                     <a class='button' href='update1.php?id=" . $row['Account_id'] . "'>Update</a>
                                     <form method='post' action='manageAccounts.php' style='display:inline;' onsubmit='return confirmDelete();'>
-                                        <input type='hidden' name='user_id' value='" . $row['Account_id'] . "'>
+                                        <input type='hidden' name='admin_id' value='" . $row['Account_id'] . "'>
                                         <button type='submit' name='delete'>Delete</button>
                                     </form>
                                   </td>";

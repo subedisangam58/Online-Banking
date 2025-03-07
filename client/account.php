@@ -12,6 +12,7 @@ if ($result && mysqli_num_rows($result) > 0) {
     $nid = $user_data['National_id'];
     $address = $user_data['Address'];
     $phone = $user_data['Phone'];
+    $accNumber = $user_data['Account_Number'];
     $Profile = $user_data['Profile'];
     $status = $user_data['Status'];
 }
@@ -84,6 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <p style="margin: 5px 10px; font-size: 15px; ;"><b>National id:</b> <?php echo $nid; ?></p><br>
                 <p style="margin: 5px 10px; font-size: 15px; ;"><b>Address:</b> <?php echo $address; ?></p><br>
                 <p style="margin: 5px 10px; font-size: 15px; ;"><b>Phone:</b> <?php echo $phone; ?></p><br>
+                <p style="margin: 5px 10px; font-size: 15px; ;"><b>Account Number:</b> <?php echo $accNumber; ?></p><br>
             </div>
             <div class="form">
                 <h2>Update Profile</h2>

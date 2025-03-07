@@ -58,3 +58,7 @@ select {
     font-size: 24px;
     margin-right: 200px;
 }
+
+span {
+    color: red;
+}

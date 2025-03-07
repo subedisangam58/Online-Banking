@@ -20,7 +20,7 @@ if(isset($_POST['login'])){
     }
 
     if(count($err) == 0){
-        $sql = "SELECT user_id,name,email FROM users WHERE email = '$email' AND password = '$encrypted_password'";
+        $sql = "SELECT user_id,name,email FROM users WHERE email = '$email' AND password = '$encrypted_password' AND status = 1";
         $result = $connection->query($sql);
         if($result->num_rows == 1){
             $row = $result->fetch_assoc();
